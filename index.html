@@ -27,43 +27,24 @@
   <script src="/_sdk/04cc6185e046f597.resizing_sdk.js" type="text/javascript" integrity="sha512-CiE/G92aQF0nxneFg1kdOvXih8sQ1Z2a2QI3+r/WvzJwQqH6+IyB3iL07OkJmpm3ABAaf07+FnqWny98f5sR6w=="></script>
  </head>
  <body data-template-id="__page-root" class="w-full overflow-hidden bg-gray-50" style="height: calc(100 * min(var(--vh, 1vh), 1vh));">
-  <header class="safe-top bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 pb-3 pt-2 relative z-50">
+    <header class="safe-top bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 pb-2 pt-2 flex items-center justify-between relative z-50">
+   <div>
+    <h1 data-template-id="app-title" class="canva-text text-lg font-bold text-gray-900">
 
-    <div class="grid grid-cols-3 items-center">
+    Coloring Book
 
-        <div class="flex justify-start">
-            <button id="prev-btn"
-                class="w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                ◀
-            </button>
-        </div>
+</h1>
+    <div class="flex items-center gap-2">
+ <p data-template-id="app-subtitle" class="canva-text text-sm text-pink-400 font-medium">
 
-        <div class="text-center">
+    Summer Fest
 
-            <h1 class="text-2xl font-bold text-gray-900">
-                Coloring Book
-            </h1>
-
-            <div class="flex items-center justify-center gap-3">
-
-                <p class="text-sm text-pink-400 font-medium tracking-wide">
-                    Summer Fest
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="flex justify-end">
-            <button id="next-btn"
-                class="w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                ▶
-            </button>
-        </div>
-
+</p><button class="text-gray-400 text-xs px-1" id="prev-btn">◀</button> <button class="text-gray-400 text-xs px-1" id="next-btn">▶</button>
     </div>
-
-</header>
+   </div>
+   <div class="flex gap-2"><button class="tool-btn" id="toggle-toolbar-btn" title="Toggle toolbar"><i data-lucide="panel-bottom-close" style="width:20px;height:20px;color:#6b7280"></i></button>
+   </div>
+  </header>
   <main id="svg-container" class="flex-1 overflow-hidden relative" style="height: calc(100 * min(var(--vh,1vh),1vh) - 130px);">
    <div id="svg-wrapper" style="transform-origin:0 0;">
     <svg id="coloring-svg" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 400 500" style="width:100%;height:100%;display:block;"><!-- Summer fest illustration --> <rect data-bg="true" width="400" height="500" fill="#ffffff" /> <path d="M100 450 Q120 380 140 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M140 450 Q160 370 180 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M180 450 Q200 380 220 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M220 450 Q240 370 260 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M260 450 Q280 380 300 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="60" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="40" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="20" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M160 180 Q200 120 240 180" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M160 180 Q200 240 240 180" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <ellipse cx="130" cy="300" rx="30" ry="45" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <ellipse cx="270" cy="300" rx="30" ry="45" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M80 250 Q90 220 110 240 Q130 210 150 240 Q160 220 170 250 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M230 250 Q240 220 260 240 Q280 210 300 240 Q310 220 320 250 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <rect x="170" y="280" width="60" height="80" rx="8" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="150" cy="100" r="15" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="250" cy="100" r="15" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M50 480 L350 480 L350 500 L50 500 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="80" cy="130" r="10" fill="#ffffff" stroke="#333" stroke-width="1" /> <circle cx="320" cy="130" r="10" fill="#ffffff" stroke="#333" stroke-width="1" /> <path d="M60 350 Q80 330 100 350 Q80 370 60 350 Z" fill="#ffffff" stroke="#333" stroke-width="1" /> <path d="M300 350 Q320 330 340 350 Q320 370 300 350 Z" fill="#ffffff" stroke="#333" stroke-width="1" /> <ellipse cx="200" cy="400" rx="50" ry="20" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M175 400 L185 370 L200 380 L215 370 L225 400" fill="#ffffff" stroke="#333" stroke-width="1.5" />
