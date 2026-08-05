@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ro">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260805-03-59e0745","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Bebas Neue":"YACgESME5ew,0","Broken Glyph":"YADZ-exUkv0,0","Canva Sans":"YAFdJjTk5UU,0","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAHO2VMiyZo,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAEul-FRQw4,0","Georgia":"YAGzXkO0pEM,0","Ghost Mono":"YAHO2EIdDP0,0","Helvetica Neue":"YAFcf6CtJfI,0","Impact":"YAFcfnjI7Vk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YADy3sAhvXQ,0","Oleo Script":"YACgEQQ14jI,0","Playfair Display":"YAFdJhem5V8,1","Poppins":"YAE5fPSY9qM,0","Press Start 2P":"YAFyGr-8pmQ,0","Source Sans 3":"YAG4lO1Mj10,0","Space Grotesk":"YAHO2sjPCSM,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Trebuchet MS":"YAFcfrglpVA,0","Verdana":"YAGzXTctYtQ,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0"}}');</script><script src="/_sdk/7949ff62d67710d5.telemetry_sdk.js" integrity="sha512-KIvXA82Di44YY/RH9/63A9MuTuavYgDFG8PfErJn7Wli4K0LAOk+coo/aPXk3+ZNL96nHh9VYD4PE+fLes+laQ=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Coloring Book</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        * { -webkit-tap-highlight-color: transparent; touch-action: none; }
+        body { font-family: 'DM Sans', sans-serif; overscroll-behavior: none; }
+        .safe-top { padding-top: env(safe-area-inset-top, 20px); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .tool-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .tool-btn.active { background: #f9e8ef; box-shadow: 0 0 0 2px #e88fb4; }
+        .color-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #e5e7eb; transition: transform 0.1s; }
+        .color-dot.active { transform: scale(1.2); border-color: #e88fb4; box-shadow: 0 0 0 2px #e88fb4; }
+        #svg-container svg path, #svg-container svg polygon, #svg-container svg circle, #svg-container svg ellipse, #svg-container svg rect:not([data-bg]) {
+            cursor: pointer; transition: fill 0.1s;
+        }
+        .toolbar-enter { transform: translateY(0); opacity: 1; }
+        .toolbar-exit { transform: translateY(100%); opacity: 0; }
+        #color-picker-modal { backdrop-filter: blur(4px); }
+    </style>
+  <script src="/_sdk/0e8d3a91e1c6f495.data_sdk.js" type="text/javascript" integrity="sha512-c00oDoGjsMgluCLLEyVl3suwEkgjOGGplVFbsilUoBg4aMKNmsL3mwsc9r0dPn95qiSZyjBousQXgROkAW7p/w=="></script>
+  <script src="/_sdk/04cc6185e046f597.resizing_sdk.js" type="text/javascript" integrity="sha512-CiE/G92aQF0nxneFg1kdOvXih8sQ1Z2a2QI3+r/WvzJwQqH6+IyB3iL07OkJmpm3ABAaf07+FnqWny98f5sR6w=="></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full overflow-hidden bg-gray-50" style="height: calc(100 * min(var(--vh, 1vh), 1vh));">
+  <header class="safe-top bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 pb-2 pt-2 flex items-center justify-between relative z-50">
+   <div>
+    <h1 data-template-id="app-title" class="canva-text text-lg font-bold text-gray-900"></h1>
+    <div class="flex items-center gap-2">
+     <p data-template-id="app-subtitle" class="canva-text text-sm text-pink-400 font-medium"></p><button class="text-gray-400 text-xs px-1" id="prev-btn">◀</button> <button class="text-gray-400 text-xs px-1" id="next-btn">▶</button>
+    </div>
+   </div>
+   <div class="flex gap-2"><button class="tool-btn" id="toggle-toolbar-btn" title="Toggle toolbar"><i data-lucide="panel-bottom-close" style="width:20px;height:20px;color:#6b7280"></i></button>
+   </div>
+  </header>
+  <main id="svg-container" class="flex-1 overflow-hidden relative" style="height: calc(100 * min(var(--vh,1vh),1vh) - 130px);">
+   <div id="svg-wrapper" style="transform-origin:0 0;">
+    <svg id="coloring-svg" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 400 500" style="width:100%;height:100%;display:block;"><!-- Summer fest illustration --> <rect data-bg="true" width="400" height="500" fill="#ffffff" /> <path d="M100 450 Q120 380 140 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M140 450 Q160 370 180 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M180 450 Q200 380 220 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M220 450 Q240 370 260 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M260 450 Q280 380 300 450 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="60" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="40" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="200" cy="180" r="20" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M160 180 Q200 120 240 180" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M160 180 Q200 240 240 180" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <ellipse cx="130" cy="300" rx="30" ry="45" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <ellipse cx="270" cy="300" rx="30" ry="45" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M80 250 Q90 220 110 240 Q130 210 150 240 Q160 220 170 250 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M230 250 Q240 220 260 240 Q280 210 300 240 Q310 220 320 250 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <rect x="170" y="280" width="60" height="80" rx="8" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="150" cy="100" r="15" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="250" cy="100" r="15" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M50 480 L350 480 L350 500 L50 500 Z" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <circle cx="80" cy="130" r="10" fill="#ffffff" stroke="#333" stroke-width="1" /> <circle cx="320" cy="130" r="10" fill="#ffffff" stroke="#333" stroke-width="1" /> <path d="M60 350 Q80 330 100 350 Q80 370 60 350 Z" fill="#ffffff" stroke="#333" stroke-width="1" /> <path d="M300 350 Q320 330 340 350 Q320 370 300 350 Z" fill="#ffffff" stroke="#333" stroke-width="1" /> <ellipse cx="200" cy="400" rx="50" ry="20" fill="#ffffff" stroke="#333" stroke-width="1.5" /> <path d="M175 400 L185 370 L200 380 L215 370 L225 400" fill="#ffffff" stroke="#333" stroke-width="1.5" />
+    </svg>
+   </div>
+  </main><!-- Toolbar -->
+  <div id="toolbar" class="fixed bottom-0 left-0 right-0 safe-bottom bg-white rounded-t-3xl shadow-lg border-t border-gray-100 px-4 pt-3 pb-2 z-50 transition-all duration-300 toolbar-enter">
+   <div class="flex items-center justify-between mb-2">
+    <div class="flex gap-1"><button class="tool-btn active" data-tool="pen" title="Pen"><i data-lucide="pen-tool" style="width:20px;height:20px"></i></button> <button class="tool-btn" data-tool="eyedropper" title="Pipetă"><i data-lucide="pipette" style="width:20px;height:20px"></i></button> <button class="tool-btn" data-tool="eraser" title="Eraser"><i data-lucide="eraser" style="width:20px;height:20px"></i></button>
+    </div>
+    <div class="flex gap-1"><button class="tool-btn" id="undo-btn" title="Undo"><i data-lucide="undo-2" style="width:20px;height:20px"></i></button> <button class="tool-btn" id="redo-btn" title="Redo"><i data-lucide="redo-2" style="width:20px;height:20px"></i></button> <button class="tool-btn" id="clear-btn" title="Clear"><i data-lucide="trash-2" style="width:20px;height:20px"></i></button> <button class="tool-btn" id="zoom-reset-btn" title="Reset Zoom"><i data-lucide="maximize" style="width:20px;height:20px"></i></button>
+    </div>
+   </div><!-- Colors -->
+   <div class="flex items-center gap-2 overflow-x-auto pb-1">
+    <div id="current-color" class="color-dot active flex-shrink-0" style="background:#e88fb4;"></div>
+    <div class="w-px h-6 bg-gray-200 flex-shrink-0"></div>
+    <div id="favorites-row" class="flex gap-2 flex-shrink-0"></div><button id="color-picker-btn" class="color-dot flex-shrink-0 bg-gradient-to-br from-red-400 via-yellow-400 to-blue-400 border-0" title="Color Picker"></button>
+   </div>
+  </div><!-- Confirm clear modal -->
+  <div id="confirm-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/30" style="display:none;">
+   <div class="bg-white rounded-2xl p-6 mx-8 shadow-xl text-center">
+    <p class="text-gray-800 font-semibold mb-4">Ștergi tot progresul?</p>
+    <div class="flex gap-3 justify-center"><button id="confirm-yes" class="px-5 py-2 bg-pink-400 text-white rounded-xl font-medium">Da</button> <button id="confirm-no" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium">Nu</button>
+    </div>
+   </div>
+  </div><!-- Color picker modal -->
+  <div id="color-picker-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/30" style="display:none;">
+   <div class="bg-white rounded-2xl p-5 mx-8 shadow-xl"><input type="color" id="native-picker" value="#e88fb4" class="w-full h-40 rounded-xl border-0 cursor-pointer">
+    <div class="flex gap-3 mt-4 justify-center"><button id="picker-ok" class="px-5 py-2 bg-pink-400 text-white rounded-xl font-medium">OK</button> <button id="picker-cancel" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium">Anulează</button>
+    </div>
+   </div>
+  </div>
+  <script src="/_sdk/b67df6528afa6d57.editing_sdk.js" integrity="sha512-ObK/O8PVNdvePOE833JpZI0oKCuD4dnU+D+5PMwY4U3o0z4/Q4l01EB77zMvgnmBiBHpDMCJTfVYFVrzp7r1lw=="></script>
+  <script>
+(function(){
+    // State
+    let currentColor = '#e88fb4';
+    let currentTool = 'pen';
+    let favorites = ['#e88fb4','#f9d56e','#88d8b0','#7ec8e3','#c3aed6','#ff6b6b','#ffa07a','#98d8c8'];
+    let undoStack = [];
+    let redoStack = [];
+    let zoom = 1, panX = 0, panY = 0;
+    let toolbarVisible = true;
+
+    const STORAGE_KEY = 'coloringbook_v1';
+    const svgContainer = document.getElementById('svg-container');
+    const svgWrapper = document.getElementById('svg-wrapper');
+    const svg = document.getElementById('coloring-svg');
+
+    // Save/Load
+    function save() {
+        const fills = {};
+        svg.querySelectorAll('path,polygon,circle,ellipse,rect:not([data-bg])').forEach((el, i) => {
+            fills[i] = el.getAttribute('fill');
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ fills, favorites, currentColor, currentTool, zoom, panX, panY }));
+    }
+
+    function load() {
+        try {
+            const d = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            if (!d) return;
+            if (d.fills) {
+                svg.querySelectorAll('path,polygon,circle,ellipse,rect:not([data-bg])').forEach((el, i) => {
+                    if (d.fills[i]) el.setAttribute('fill', d.fills[i]);
+                });
+            }
+            if (d.favorites) favorites = d.favorites;
+            if (d.currentColor) currentColor = d.currentColor;
+            if (d.currentTool) currentTool = d.currentTool;
+            if (d.zoom) zoom = d.zoom;
+            if (d.panX !== undefined) panX = d.panX;
+            if (d.panY !== undefined) panY = d.panY;
+            applyTransform();
+        } catch(e) {}
+    }
+
+    function applyTransform() {
+        svgWrapper.style.transform = `translate(${panX}px,${panY}px) scale(${zoom})`;
+    }
+
+    // Undo/Redo
+    function pushUndo(el, oldFill) {
+        undoStack.push({ el, oldFill, newFill: el.getAttribute('fill') });
+        redoStack = [];
+        if (undoStack.length > 100) undoStack.shift();
+    }
+
+    document.getElementById('undo-btn').onclick = () => {
+        const a = undoStack.pop();
+        if (!a) return;
+        a.el.setAttribute('fill', a.oldFill);
+        redoStack.push(a);
+        save();
+    };
+    document.getElementById('redo-btn').onclick = () => {
+        const a = redoStack.pop();
+        if (!a) return;
+        a.el.setAttribute('fill', a.newFill);
+        undoStack.push(a);
+        save();
+    };
+
+    // SVG coloring
+    svg.addEventListener('click', (e) => {
+        const el = e.target;
+        if (el.hasAttribute('data-bg') || el === svg) return;
+        if (!el.matches('path,polygon,circle,ellipse,rect')) return;
+
+        if (currentTool === 'eyedropper') {
+            currentColor = el.getAttribute('fill') || '#ffffff';
+            updateCurrentColor();
+            save();
+            return;
+        }
+
+        const oldFill = el.getAttribute('fill');
+        const newFill = currentTool === 'eraser' ? '#ffffff' : currentColor;
+        if (oldFill === newFill) return;
+        el.setAttribute('fill', newFill);
+        pushUndo(el, oldFill);
+        save();
+    });
+
+    // Tools
+    document.querySelectorAll('[data-tool]').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTool = btn.dataset.tool;
+            save();
+        };
+    });
+
+    // Favorites
+    function renderFavorites() {
+        const row = document.getElementById('favorites-row');
+        row.innerHTML = '';
+        favorites.forEach((c, i) => {
+            const d = document.createElement('div');
+            d.className = 'color-dot flex-shrink-0' + (c === currentColor ? ' active' : '');
+            d.style.background = c;
+            d.onclick = () => { currentColor = c; updateCurrentColor(); save(); };
+            d.ondblclick = () => { favorites[i] = currentColor; renderFavorites(); save(); };
+            row.appendChild(d);
+        });
+    }
+
+    function updateCurrentColor() {
+        document.getElementById('current-color').style.background = currentColor;
+        renderFavorites();
+    }
+
+    // Color picker
+    document.getElementById('color-picker-btn').onclick = () => {
+        document.getElementById('native-picker').value = currentColor;
+        document.getElementById('color-picker-modal').style.display = 'flex';
+    };
+    document.getElementById('picker-ok').onclick = () => {
+        currentColor = document.getElementById('native-picker').value;
+        updateCurrentColor(); save();
+        document.getElementById('color-picker-modal').style.display = 'none';
+    };
+    document.getElementById('picker-cancel').onclick = () => {
+        document.getElementById('color-picker-modal').style.display = 'none';
+    };
+
+    // Clear
+    document.getElementById('clear-btn').onclick = () => {
+        document.getElementById('confirm-modal').style.display = 'flex';
+    };
+    document.getElementById('confirm-yes').onclick = () => {
+        svg.querySelectorAll('path,polygon,circle,ellipse,rect:not([data-bg])').forEach(el => el.setAttribute('fill', '#ffffff'));
+        undoStack = []; redoStack = [];
+        document.getElementById('confirm-modal').style.display = 'none';
+        save();
+    };
+    document.getElementById('confirm-no').onclick = () => {
+        document.getElementById('confirm-modal').style.display = 'none';
+    };
+
+    // Zoom & Pan (pinch + double tap)
+    let touches = [], lastDist = 0, lastPanX = 0, lastPanY = 0, isPanning = false;
+
+    svgContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+            isPanning = false;
+        } else if (e.touches.length === 1 && zoom > 1) {
+            lastPanX = e.touches[0].clientX - panX;
+            lastPanY = e.touches[0].clientY - panY;
+            isPanning = true;
+        }
+    }, { passive: false });
+
+    svgContainer.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+            zoom = Math.min(5, Math.max(1, zoom * (dist / lastDist)));
+            lastDist = dist;
+            applyTransform(); save();
+        } else if (e.touches.length === 1 && isPanning && zoom > 1) {
+            e.preventDefault();
+            panX = e.touches[0].clientX - lastPanX;
+            panY = e.touches[0].clientY - lastPanY;
+            applyTransform(); save();
+        }
+    }, { passive: false });
+
+    // Double tap reset
+    let lastTap = 0;
+    svgContainer.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTap < 300 && e.changedTouches.length === 1) {
+            zoom = 1; panX = 0; panY = 0;
+            applyTransform(); save();
+        }
+        lastTap = now;
+        isPanning = false;
+    });
+
+    document.getElementById('zoom-reset-btn').onclick = () => {
+        zoom = 1; panX = 0; panY = 0; applyTransform(); save();
+    };
+
+    // Toggle toolbar
+    document.getElementById('toggle-toolbar-btn').onclick = () => {
+        const tb = document.getElementById('toolbar');
+        toolbarVisible = !toolbarVisible;
+        tb.classList.toggle('toolbar-exit', !toolbarVisible);
+        tb.classList.toggle('toolbar-enter', toolbarVisible);
+    };
+
+    // Init
+    load();
+    renderFavorites();
+    updateCurrentColor();
+    document.querySelectorAll('[data-tool]').forEach(b => { if (b.dataset.tool === currentTool) { b.classList.add('active'); } else { b.classList.remove('active'); } });
+    lucide.createIcons();
+})();
+</script>
+ </body>
+</html>
